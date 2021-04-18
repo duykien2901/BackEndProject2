@@ -8,12 +8,17 @@ import com.example.project2.Auth.Model.SignUpRequest;
 import com.example.project2.Auth.Repository.UserRepository;
 import com.example.project2.Auth.Service.UserDetailImp;
 import com.example.project2.Auth.Service.UserDetailsServiceImp;
+import com.example.project2.Commom.Exception.IdNotFoundException;
+import com.example.project2.Commom.Exception.PermissRoleError;
+import com.example.project2.Commom.Exception.UsernameOrPasswordNotFound;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
+@Slf4j
 public class AuthController {
     @Autowired
     UserRepository userRepository;
@@ -45,15 +51,21 @@ public class AuthController {
     @PostMapping("/api/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         // authen username and password
-        Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-        // Set user to context
-        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // return jwt
-        String jwt = jwtTokenProvider.generateToken((UserDetailImp) authentication.getPrincipal());
-        Optional<UserEntity> userEntity = userRepository.findByUsername(loginRequest.getUsername());
-        return ResponseEntity.ok(new LoginResponse(jwt, userEntity));
+        try {
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
+            // Set user to context
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // return jwt
+            String jwt = jwtTokenProvider.generateToken((UserDetailImp) authentication.getPrincipal());
+            Optional<UserEntity> userEntity = userRepository.findByUsername(loginRequest.getUsername());
+            return ResponseEntity.ok(new LoginResponse(jwt, userEntity));
+        } catch (Exception e) {
+            throw new UsernameOrPasswordNotFound("Username or Password is not found");
+        }
+
     }
 
     @PostMapping("/api/signup")
@@ -61,7 +73,7 @@ public class AuthController {
         return ResponseEntity.ok(userService.save(signUpRequest));
     }
 
-    @GetMapping("/api/login")
+    @GetMapping("/api/admin")
     public ResponseEntity<?> test() {
         Map<String, String> map = new HashMap<String, String>();
         map.put("message", "hello");

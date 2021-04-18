@@ -1,6 +1,7 @@
 package com.example.project2.Auth.Helper;
 
 import com.example.project2.Auth.Service.UserDetailImp;
+import com.example.project2.Commom.Exception.UnAuthorException;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -31,11 +32,12 @@ public class JwtTokenProvider {
         return Jwts.parser().setSigningKey(JWT_Secret).parseClaimsJws(jwtToken).getBody().getSubject();
     }
 
-    public boolean validateJwtToken(String token) {
+    public boolean validateJwtToken(String token) throws UnAuthorException{
         try {
             Jwts.parser().setSigningKey(JWT_Secret).parseClaimsJws(token);
             return true;
-        }catch (SignatureException e){
+        }
+        catch (SignatureException e){
             log.error("Invalid JWT signature: {}", e.getMessage());
         }catch (MalformedJwtException e) {
             log.error("Invalid JWT token: {}", e.getMessage());

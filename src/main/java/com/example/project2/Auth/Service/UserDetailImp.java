@@ -24,9 +24,9 @@ public class UserDetailImp implements UserDetails {
         if(userEntity.getPermission() == 1) {
             authorityUser = new SimpleGrantedAuthority("ROLE_ADMIN");
         }else if(userEntity.getPermission() == 2) {
-            authorityUser = new SimpleGrantedAuthority("ROLE_TEACHER");
-        }else {
             authorityUser = new SimpleGrantedAuthority("ROLE_STUDENT");
+        }else {
+            authorityUser = new SimpleGrantedAuthority("ROLE_TEACHER");
         }
         return new UserDetailImp(userEntity.getId(),userEntity.getUsername(), userEntity.getPassword(), authorityUser);
     }

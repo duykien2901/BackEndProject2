@@ -1,7 +1,6 @@
 package com.example.project2.Auth.Entity;
 
 import lombok.Data;
-import lombok.Generated;
 
 import javax.persistence.*;
 
