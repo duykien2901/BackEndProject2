@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface PersonalRepository extends JpaRepository<PersonalEntity, Integer> {
     @Query(value = "select * from personal_info where personal_info.account_id = :accountId", nativeQuery = true)
     Optional<PersonalEntity> findByAccountId(@Param("accountId") Integer accountId);
+
+    PersonalEntity findByLastName(String last_name);
 }

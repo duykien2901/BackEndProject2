@@ -12,7 +12,7 @@ public class ClassroomEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
-    @Column(name = "classroom_name")
+    @Column(name = "classroom_name", unique = true)
     private String classroomName;
 
     @Column(name = "home_room_teacher_id")
