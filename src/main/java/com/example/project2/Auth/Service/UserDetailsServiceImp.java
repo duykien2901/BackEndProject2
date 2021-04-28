@@ -20,12 +20,12 @@ public class UserDetailsServiceImp implements UserDetailsService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username Not Found!"));
             return UserDetailImp.build(userEntity);
-
     }
 
     public Optional<UserEntity> save(SignUpRequest signUpRequest) {

@@ -40,4 +40,6 @@ public class TimetableEntity {
     @OneToOne
     @JoinColumn(name = "classroom_id", insertable = false, updatable = false)
     private ClassroomEntity classroomEntity;
+
+
 }

@@ -1,11 +1,16 @@
 package com.example.project2.Auth.Entity;
 
+import com.example.project2.PersonalInfor.Entity.PersonalEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "login_info")
 public class UserEntity {
     @Id
@@ -20,4 +25,5 @@ public class UserEntity {
 
     @Column
     private Integer permission;
+
 }

@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -78,5 +79,11 @@ public class AuthController {
         Map<String, String> map = new HashMap<String, String>();
         map.put("message", "hello");
         return ResponseEntity.ok(map);
+    }
+
+    @GetMapping("/api/account")
+    public ResponseEntity<?> getAll() {
+       List<UserEntity> list = userRepository.findAll();
+        return ResponseEntity.ok(list);
     }
 }

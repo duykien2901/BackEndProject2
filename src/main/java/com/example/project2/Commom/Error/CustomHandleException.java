@@ -1,9 +1,6 @@
 package com.example.project2.Commom.Error;
 
-import com.example.project2.Commom.Exception.IdNotFoundException;
-import com.example.project2.Commom.Exception.PermissRoleError;
-import com.example.project2.Commom.Exception.UnAuthorException;
-import com.example.project2.Commom.Exception.UsernameOrPasswordNotFound;
+import com.example.project2.Commom.Exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -34,5 +31,11 @@ public class CustomHandleException {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorModelResponse unauthor(UnAuthorException ex) {
         return new ErrorModelResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
+    @ExceptionHandler(InternalServerError.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorModelResponse serverError(InternalServerError ex) {
+        return new ErrorModelResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 }

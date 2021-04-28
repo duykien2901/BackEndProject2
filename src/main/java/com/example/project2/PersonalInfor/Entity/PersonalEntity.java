@@ -1,5 +1,6 @@
 package com.example.project2.PersonalInfor.Entity;
 
+import com.example.project2.Auth.Entity.UserEntity;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -42,4 +43,5 @@ public class PersonalEntity {
 
     @Column(name = "account_id")
     private Integer accountId;
+
 }

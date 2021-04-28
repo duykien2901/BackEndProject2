@@ -32,4 +32,19 @@ public class TimetableController {
 //        }
         return ResponseEntity.ok(timetableService.insertTimetable(id, timetableReq));
     }
+
+    @PostMapping("/api/timetable/new")
+    public ResponseEntity<?> addTimetable(@RequestBody TimetableReq timetableReq) {
+        return ResponseEntity.ok(timetableService.addNew(timetableReq));
+    }
+
+    @GetMapping("/api/timetable/teacher-all/{id}")
+    public ResponseEntity<?> getTeacherFromId(@PathVariable("id") Integer teacherId) {
+        return ResponseEntity.ok(timetableService.getTeacherFromId(teacherId));
+    }
+
+    @PostMapping("/api/timetable/test/getList/{id}")
+    public ResponseEntity<?> getListTeacherId(@PathVariable("id") Integer id, @RequestBody TimetableReq timetableReq) {
+        return ResponseEntity.ok(timetableService.test(id, timetableReq));
+    }
 }
