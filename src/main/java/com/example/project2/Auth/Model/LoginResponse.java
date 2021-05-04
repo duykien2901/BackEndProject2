@@ -10,5 +10,4 @@ import java.util.Optional;
 @AllArgsConstructor
 public class LoginResponse {
     String jwt;
-    private Optional<UserEntity> userEntity;
 }

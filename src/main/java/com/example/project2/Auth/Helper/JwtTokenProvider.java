@@ -21,7 +21,7 @@ public class JwtTokenProvider {
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
         // create jwt String from username
         return Jwts.builder()
-                .setSubject(userDetailImp.getUsername())
+                .setSubject(userDetailImp.getUsername() + "," + userDetailImp.getAuthority() + "," + userDetailImp.getId())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS256, JWT_Secret)
@@ -29,7 +29,8 @@ public class JwtTokenProvider {
     }
 
     public String getUsernameFromJwt(String jwtToken) {
-        return Jwts.parser().setSigningKey(JWT_Secret).parseClaimsJws(jwtToken).getBody().getSubject();
+        String subject =  Jwts.parser().setSigningKey(JWT_Secret).parseClaimsJws(jwtToken).getBody().getSubject();
+        return subject.split(",")[0];
     }
 
     public boolean validateJwtToken(String token) throws UnAuthorException{

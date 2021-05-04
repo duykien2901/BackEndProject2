@@ -21,9 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -31,8 +29,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@Controller
+@RestController
 @Slf4j
+@CrossOrigin(value = "*", maxAge = 3600)
 public class AuthController {
     @Autowired
     UserRepository userRepository;
@@ -62,9 +61,9 @@ public class AuthController {
             // return jwt
             String jwt = jwtTokenProvider.generateToken((UserDetailImp) authentication.getPrincipal());
             Optional<UserEntity> userEntity = userRepository.findByUsername(loginRequest.getUsername());
-            return ResponseEntity.ok(new LoginResponse(jwt, userEntity));
+            return ResponseEntity.ok(new LoginResponse(jwt));
         } catch (Exception e) {
-            throw new UsernameOrPasswordNotFound("Username or Password is not found");
+            throw new UsernameOrPasswordNotFound("Username or Password is not incorrect");
         }
 
     }
