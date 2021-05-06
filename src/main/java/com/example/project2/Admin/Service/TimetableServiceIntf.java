@@ -16,4 +16,6 @@ public interface TimetableServiceIntf {
     public Map<String, String> addNew(TimetableReq timetableReq);
 
     public List<TimetableEntity> getTeacherFromId(Integer teacherId);
+
+    public List<TimetableEntity> getTimetableFromStudentId(Integer studentId);
 }

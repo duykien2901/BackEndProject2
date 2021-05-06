@@ -1,5 +1,6 @@
 package com.example.project2.Device.Controller;
 
+import com.example.project2.Device.Model.Request.DeviceReq;
 import com.example.project2.Device.Repository.DeviceInfoRepository;
 import com.example.project2.Device.Repository.DeviceRepository;
 import com.example.project2.Device.Service.DeviceService;
@@ -9,6 +10,7 @@ import com.example.project2.Json.JsonResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +49,7 @@ public class DeviceController {
             int totalPage = (int)Math.ceil((double) deviceRepository.findAll().size()/size);
 
             return Optional.ofNullable(deviceService.findAllByPage(pageable))
-                    .map(rsList -> !rsList.isEmpty() ? JsonResult.found(rsList, totalPage) : JsonResult.notFound("Device not found"))
+                    .map(rsList -> !rsList.isEmpty() ? JsonResult.found(rsList, totalPage) : JsonResult.notFound("Device "))
                     .orElse(JsonResult.serverError("Internal Server Error")
                     );
         } catch (Exception ex) {
@@ -56,12 +58,38 @@ public class DeviceController {
         }
     }
 
-//    @GetMapping("all/{id}")
-//    public ResponseEntity<?> getDeviceById(@PathVariable("id") Integer id) {
-//        return Optional.ofNullable(deviceInforService.getByDeviceId(id))
-//                .map(rsList -> !rsList.isEmpty() ? JsonResult.found(rsList) : JsonResult.notFound("id"))
-//                .orElse(JsonResult.serverError("Internal Server Error"));
-//    }
+    @GetMapping("/search")
+    public ResponseEntity<?> searchByName(@RequestParam("name") String name, @RequestParam("page") Integer page, @RequestParam("size") Integer size) {
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            int totalPage = (int)Math.ceil((double) deviceRepository.searchByName(name, pageable).getSize()/size);
+            return Optional.ofNullable(deviceService.searchByDeviceName(pageable, name))
+                    .map(rsList -> !rsList.isEmpty() ? JsonResult.found(rsList, totalPage) : JsonResult.notFound("Device"))
+                    .orElse(JsonResult.serverError("Internal Server Error"));
 
+        } catch (Exception ex) {
+            logger.error("Device is empty", ex.toString());
+            return JsonResult.serverError("Internal Server Error");
+        }
+    }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findById(@PathVariable Integer id) {
+        return ResponseEntity.ok(deviceService.findById(id));
+    }
+
+    @PostMapping("/insert")
+    public ResponseEntity<?> addDevice(@RequestBody DeviceReq deviceReq) {
+        return ResponseEntity.ok(deviceService.addDevice(deviceReq));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateDevice(@RequestBody DeviceReq deviceReq, @PathVariable Integer id) {
+        return ResponseEntity.ok(deviceService.updateDevice(deviceReq, id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deletedDevice(@PathVariable Integer id) {
+        return ResponseEntity.ok(deviceService.deletedDevice(id));
+    }
 }

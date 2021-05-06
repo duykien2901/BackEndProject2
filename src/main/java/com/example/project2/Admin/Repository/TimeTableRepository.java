@@ -12,4 +12,7 @@ import java.util.List;
 public interface TimeTableRepository extends JpaRepository<TimetableEntity, Integer> {
     @Query(value = "select * from timetable where teacher_id = :teacherId", nativeQuery = true)
     public List<TimetableEntity> findByTeacherId(@Param(value = "teacherId") Integer teacherId);
+
+    @Query(value = "select * from timetable where classroom_id = :classroom_id", nativeQuery = true)
+    public List<TimetableEntity> findByClassroomId(@Param(value = "classroom_id") Integer classroomId);
 }

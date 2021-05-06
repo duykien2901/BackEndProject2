@@ -24,12 +24,8 @@ public class TimetableController {
         return ResponseEntity.ok(timetableService.findAll());
     }
 
-    @PostMapping("/api/timetable/insert/{id}")
+    @PutMapping("/api/timetable/insert/{id}")
     public ResponseEntity<?> insertTimetable(@PathVariable Integer id, @RequestBody TimetableReq timetableReq) {
-//        Map<String, String> result = new HashMap<>();
-//        if(timetableService.insertTimetable(id, timetableReq)){
-//            result.put("message", "Success");
-//        }
         return ResponseEntity.ok(timetableService.insertTimetable(id, timetableReq));
     }
 
@@ -47,4 +43,11 @@ public class TimetableController {
     public ResponseEntity<?> getListTeacherId(@PathVariable("id") Integer id, @RequestBody TimetableReq timetableReq) {
         return ResponseEntity.ok(timetableService.test(id, timetableReq));
     }
+
+    // API For Student
+    @GetMapping("/api/timetable/student/{student_id}")
+    public ResponseEntity<?> getTimetableForStudent(@PathVariable("student_id") Integer studentId) {
+        return ResponseEntity.ok(timetableService.getTimetableFromStudentId(studentId));
+    }
+
 }

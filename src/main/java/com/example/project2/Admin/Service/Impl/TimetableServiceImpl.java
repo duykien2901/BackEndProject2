@@ -13,6 +13,8 @@ import com.example.project2.Commom.Exception.IdNotFoundException;
 import com.example.project2.Commom.Exception.InternalServerError;
 import com.example.project2.PersonalInfor.Entity.PersonalEntity;
 import com.example.project2.PersonalInfor.Repository.PersonalRepository;
+import com.example.project2.Student.Entity.StudentEntity;
+import com.example.project2.Student.Repository.StudentRepository;
 import com.example.project2.Teacher.Entity.TeacherEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class TimetableServiceImpl implements TimetableServiceIntf {
 
     @Autowired
     CourseRepository courseRepository;
+
+    @Autowired
+    StudentRepository studentRepository;
 
     @Override
     public List<TimetableRes> findAll() {
@@ -109,6 +114,17 @@ public class TimetableServiceImpl implements TimetableServiceIntf {
         }catch (Exception e){
             result.put("message", "add fail");
             return result;
+        }
+    }
+
+    @Override
+    public List<TimetableEntity> getTimetableFromStudentId(Integer studentId) throws IdNotFoundException{
+        Optional<StudentEntity> studentEntity = studentRepository.findById(studentId);
+        if(studentEntity.isPresent()) {
+            List<TimetableEntity> timetableEntityList = timeTableRepository.findByClassroomId(studentEntity.get().getClassroomId());
+            return timetableEntityList;
+        } else {
+            throw new IdNotFoundException(studentId);
         }
     }
 
