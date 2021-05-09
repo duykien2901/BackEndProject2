@@ -12,6 +12,8 @@ public class TimetableRes {
 
     private String teacherName;
 
+    private Integer teacherId;
+
     private String courseName;
 
     private Integer dayOfWeek;

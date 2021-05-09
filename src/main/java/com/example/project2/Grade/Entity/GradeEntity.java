@@ -1,5 +1,6 @@
 package com.example.project2.Grade.Entity;
 
+import com.example.project2.Admin.Entity.CourseEntity;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -17,6 +18,10 @@ public class GradeEntity {
 
     @Column(name = "course_id")
     private Integer courseId;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "course_id",referencedColumnName = "id", updatable = false, insertable = false)
+    private CourseEntity courseEntity;
 
     @Column(name = "school_year")
     private Integer schoolYear;

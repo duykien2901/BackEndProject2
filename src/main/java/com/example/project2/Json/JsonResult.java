@@ -12,7 +12,7 @@ public class JsonResult {
     private static final String CONTENT_TYPE = "application/json; charset=utf-8";
     private String result;
     private Object data;
-    private Integer totalPage;
+    private Integer total;
 
     private static JsonResult build(String result, Object data, Integer totalPage) {
         return new JsonResult(result, data, totalPage);

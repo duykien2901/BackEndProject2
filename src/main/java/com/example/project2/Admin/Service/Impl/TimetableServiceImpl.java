@@ -18,6 +18,8 @@ import com.example.project2.Student.Repository.StudentRepository;
 import com.example.project2.Teacher.Entity.TeacherEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -44,9 +46,7 @@ public class TimetableServiceImpl implements TimetableServiceIntf {
     @Autowired
     StudentRepository studentRepository;
 
-    @Override
-    public List<TimetableRes> findAll() {
-        List<TimetableEntity> list = timeTableRepository.findAll();
+    public List<TimetableRes> convertToTimetableRes(List<TimetableEntity> list) {
         List<TimetableRes> listTimetableRes = list.stream().map(timetable -> {
             TimetableRes timetableRes = new TimetableRes();
             timetableRes.setId(timetable.getId());
@@ -54,10 +54,19 @@ public class TimetableServiceImpl implements TimetableServiceIntf {
             timetableRes.setCourseName(timetable.getCourseEntity().getCourseName());
             String teacherName = personalRepository.findByAccountId(timetable.getTeacherEntity().getAccountId()).get().getLastName();
             timetableRes.setTeacherName(teacherName);
+            timetableRes.setTeacherId(timetable.getTeacherId());
             timetableRes.setDayOfWeek(timetable.getDayOfWeek());
             timetableRes.setShift(timetable.getShift());
             return timetableRes;
         }).collect(Collectors.toList());
+
+        return listTimetableRes;
+    }
+
+    @Override
+    public List<TimetableRes> findAll() {
+        List<TimetableEntity> list = timeTableRepository.findAll();
+        List<TimetableRes> listTimetableRes = convertToTimetableRes(list);
 
         return listTimetableRes;
     }
@@ -85,6 +94,14 @@ public class TimetableServiceImpl implements TimetableServiceIntf {
     @Override
     public List<TimetableEntity> getTeacherFromId(Integer teacherId) {
         return timeTableRepository.findByTeacherId(teacherId);
+    }
+
+    @Override
+    public List<TimetableRes> getAllByPage(Pageable pageable) {
+        Page<TimetableEntity> page = timeTableRepository.findAllByPage(pageable);
+        List<TimetableEntity> timetableEntityList = page.toList();
+        return convertToTimetableRes(timetableEntityList);
+
     }
 
     @Override

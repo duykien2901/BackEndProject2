@@ -8,4 +8,6 @@ import java.util.List;
 public interface TeacherSer {
     public TeacherResponse getTeacherName(Integer id);
 
+    public List<TeacherResponse> findAll();
+
 }

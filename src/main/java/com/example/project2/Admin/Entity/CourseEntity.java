@@ -1,8 +1,10 @@
 package com.example.project2.Admin.Entity;
 
+import com.example.project2.Grade.Entity.GradeEntity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -14,4 +16,5 @@ public class CourseEntity {
 
     @Column(name = "course_name", unique = true)
     private String courseName;
+
 }

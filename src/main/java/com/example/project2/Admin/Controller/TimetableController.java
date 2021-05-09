@@ -4,14 +4,20 @@ import com.example.project2.Admin.Entity.TimetableEntity;
 import com.example.project2.Admin.Model.Request.TimetableReq;
 import com.example.project2.Admin.Repository.TimeTableRepository;
 import com.example.project2.Admin.Service.Impl.TimetableServiceImpl;
+import com.example.project2.Json.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
+@CrossOrigin(value = "*", maxAge = 3600)
 public class TimetableController {
     @Autowired
     TimetableServiceImpl timetableService;
@@ -27,6 +33,21 @@ public class TimetableController {
     @PutMapping("/api/timetable/insert/{id}")
     public ResponseEntity<?> insertTimetable(@PathVariable Integer id, @RequestBody TimetableReq timetableReq) {
         return ResponseEntity.ok(timetableService.insertTimetable(id, timetableReq));
+    }
+
+    @GetMapping("/api/timetable/page")
+    public ResponseEntity<?> getTimetableByPage(@RequestParam Integer page, @RequestParam Integer pageSize) {
+
+        try {
+            Pageable pageable = PageRequest.of(page, pageSize);
+
+            return Optional.ofNullable(timetableService.getAllByPage(pageable))
+                    .map(rsPage -> !rsPage.isEmpty() ? JsonResult.found(rsPage, timeTableRepository.findAll().size()) : JsonResult.notFound("Page"))
+                    .orElse(JsonResult.serverError("Intenal Server Error"));
+            //        return ResponseEntity.ok (gradeSevice.getGradeByPage(studentId, pageable).getContent());
+        } catch (Exception ex) {
+            return (JsonResult.serverError("Intenal Server Error"));
+        }
     }
 
     @PostMapping("/api/timetable/new")
