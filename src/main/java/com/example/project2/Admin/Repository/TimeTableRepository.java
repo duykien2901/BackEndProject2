@@ -18,6 +18,29 @@ public interface TimeTableRepository extends JpaRepository<TimetableEntity, Inte
     @Query(value = "select * from timetable where classroom_id = :classroom_id", nativeQuery = true)
     public List<TimetableEntity> findByClassroomId(@Param(value = "classroom_id") Integer classroomId);
 
-    @Query(value = "select * from timetable", nativeQuery = true)
+    @Query(value = "select * from timetable order by ", nativeQuery = true)
     public Page<TimetableEntity> findAllByPage(Pageable pageable);
+
+    @Query(value = "select t from TimetableEntity t where t.classroomEntity.classroomName like %:value%")
+    public Page<TimetableEntity> findByClassroomName(@Param(value = "value") String value, Pageable pageable);
+
+    @Query(value = "select t from TimetableEntity t where t.classroomEntity.classroomName like %:value% ")
+    public List<TimetableEntity> findByClassroomNameNotPage(@Param(value = "value") String value);
+
+    @Query(value = "select t from TimetableEntity t " +
+            "where t.classroomEntity.classroomName like %:className% and t.teacherEntity.id in " +
+            "(select t.id from PersonalEntity p, TeacherEntity t where p.accountId = t.accountId and p.lastName like %:teacherName%) and " +
+            "t.courseEntity.courseName like %:courseName%")
+    public Page<TimetableEntity> findByAllDetail(@Param(value = "className") String className,
+                                                 @Param(value="teacherName") String teacherName,
+                                                 @Param(value = "courseName") String courseName ,Pageable pageable);
+
+    @Query(value = "select t from TimetableEntity t " +
+            "where t.classroomEntity.classroomName like %:className% and t.teacherEntity.id in " +
+            "(select t.id from PersonalEntity p, TeacherEntity t where p.accountId = t.accountId and p.lastName like %:teacherName%) and " +
+            "t.courseEntity.courseName like %:courseName% order by t.classroomEntity.classroomName ASC ")
+    public List<TimetableEntity> findByAllDetailNotPage(@Param(value = "className") String className,
+                                                 @Param(value="teacherName") String teacherName,
+                                                 @Param(value = "courseName") String courseName);
+
 }

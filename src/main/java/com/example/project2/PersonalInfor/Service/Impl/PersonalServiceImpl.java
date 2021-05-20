@@ -20,7 +20,7 @@ public class PersonalServiceImpl implements Personal {
 
     @Override
     public Optional<PersonalEntity> findByAccountId(Integer accountId) throws IdNotFoundException{
-        if(personalRepository.findById(accountId).isPresent()) {
+        if(personalRepository.findByAccountId(accountId).isPresent()) {
             return personalRepository.findByAccountId(accountId);
         }
         throw new IdNotFoundException(accountId);

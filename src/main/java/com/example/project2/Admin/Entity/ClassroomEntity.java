@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class ClassroomEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Integer id;
 
     @Column(name = "classroom_name", unique = true)
     private String classroomName;

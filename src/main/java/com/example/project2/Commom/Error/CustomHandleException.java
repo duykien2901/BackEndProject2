@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
+import java.sql.Time;
+
 @RestControllerAdvice
 public class CustomHandleException {
     @ExceptionHandler(IdNotFoundException.class)
@@ -36,6 +38,12 @@ public class CustomHandleException {
     @ExceptionHandler(InternalServerError.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorModelResponse serverError(InternalServerError ex) {
+        return new ErrorModelResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
+
+    @ExceptionHandler(TimetableIsExist.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorModelResponse badRequest(TimetableIsExist ex) {
         return new ErrorModelResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 }

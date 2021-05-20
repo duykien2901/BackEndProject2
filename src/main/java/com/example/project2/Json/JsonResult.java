@@ -23,8 +23,8 @@ public class JsonResult {
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf(CONTENT_TYPE)).body(JsonResult.build("success", data, totalPage));
     }
 
-    public static ResponseEntity<JsonResult> found(Object data, Integer totalePage) {
-        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf(CONTENT_TYPE)).body(JsonResult.build("found", data, totalePage));
+    public static ResponseEntity<JsonResult> found(Object data, Integer totalPage) {
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf(CONTENT_TYPE)).body(JsonResult.build("found", data, totalPage));
     }
 
     public static ResponseEntity<JsonResult> notFound(Object data) {
