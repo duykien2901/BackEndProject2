@@ -1,6 +1,10 @@
 package com.example.project2.Device.Service.impl;
 
+import com.example.project2.Auth.Entity.UserEntity;
+import com.example.project2.Auth.Repository.UserRepository;
+import com.example.project2.Commom.Exception.DeviceIsExist;
 import com.example.project2.Commom.Exception.IdNotFoundException;
+import com.example.project2.Commom.Exception.TimetableIsExist;
 import com.example.project2.Device.Entity.DeviceEntity;
 import com.example.project2.Device.Entity.DeviceInforEntity;
 import com.example.project2.Device.Model.Request.DeviceReq;
@@ -36,6 +40,9 @@ public class DeviceServiceImpl implements DeviceService {
     @Autowired
     PersonalRepository personalRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     public static final Logger logger = LoggerFactory.getLogger(DeviceServiceImpl.class);
 
     public List<DeviceInfoRep> changeToDeviceInforRep(Integer deviceId) {
@@ -44,27 +51,26 @@ public class DeviceServiceImpl implements DeviceService {
                     DeviceInfoRep deviceInfoRep = new DeviceInfoRep();
                     deviceInfoRep.setId(list.getId());
                     deviceInfoRep.setAccountId(list.getAccountId());
-                    deviceInfoRep.setLastuseAt(list.getLastuseAt());
-                    deviceInfoRep.setName(personalRepository.findByAccountId(list.getAccountId()).get().getLastName());
+                    deviceInfoRep.setLastUseAt(list.getLastuseAt());
+                    deviceInfoRep.setUsername(userRepository.findById(list.getAccountId()).get().getUsername());
+                    deviceInfoRep.setTeacherName(personalRepository.findByAccountId(list.getAccountId()).get().getLastName());
                     return deviceInfoRep;
                 }).collect(Collectors.toList());
         return deviceInfoRepList;
     }
 
     @Override
-    public Map<String, Boolean> addDevice(DeviceReq deviceReq) {
+    public Map<String, Boolean> addDevice(DeviceReq deviceReq) throws DeviceIsExist {
         Map<String, Boolean> result = new HashMap<>();
-       try {
-           DeviceEntity deviceEntity = new DeviceEntity();
-           deviceEntity.setStatus(deviceReq.getStatus());
-           deviceEntity.setDeviceName(deviceReq.getDeviceName());
-           deviceRepository.save(deviceEntity);
-           result.put("message", true);
-           return result;
-       } catch (Exception e) {
-           result.put("message", false);
-           return result;
-       }
+        if (!deviceRepository.checkDeviceName(deviceReq.getDeviceName()).isPresent()) {
+            DeviceEntity deviceEntity = new DeviceEntity();
+            deviceEntity.setStatus(deviceReq.getStatus());
+            deviceEntity.setDeviceName(deviceReq.getDeviceName());
+            deviceRepository.save(deviceEntity);
+            result.put("message", true);
+            return result;
+        }
+        throw new DeviceIsExist("Device is exist");
     }
 
     @Override
@@ -78,8 +84,8 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public Map<String, Boolean> deletedDevice(Integer id) throws IdNotFoundException{
-        if(deviceRepository.findById(id).isPresent()) {
+    public Map<String, Boolean> deletedDevice(Integer id) throws IdNotFoundException {
+        if (deviceRepository.findById(id).isPresent()) {
             Map<String, Boolean> result = new HashMap<>();
             deviceRepository.deleteById(id);
             result.put("message", true);
@@ -90,25 +96,28 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public Map<String, Boolean> updateDevice(DeviceReq deviceReq, Integer id) throws IdNotFoundException{
+    public Map<String, Boolean> updateDevice(DeviceReq deviceReq, Integer id) throws DeviceIsExist {
         Map<String, Boolean> result = new HashMap<>();
-        if(deviceRepository.findById(id).isPresent()) {
-            DeviceEntity deviceEntity = new DeviceEntity();
-            deviceEntity.setId(id);
-            deviceEntity.setStatus(deviceReq.getStatus());
-            deviceEntity.setDeviceName(deviceReq.getDeviceName());
-            deviceRepository.save(deviceEntity);
-            result.put("message", true);
-            return result;
-        } else {
-            throw new IdNotFoundException(id);
+        if (deviceRepository.findById(id).isPresent()) {
+            if (deviceRepository.findByDeviceNameLike(deviceReq.getDeviceName()).get().getId() == id ||
+                    !deviceRepository.findByDeviceNameLike(deviceReq.getDeviceName()).isPresent()
+            ) {
+                DeviceEntity deviceEntity = new DeviceEntity();
+                deviceEntity.setId(id);
+                deviceEntity.setStatus(deviceReq.getStatus());
+                deviceEntity.setDeviceName(deviceReq.getDeviceName());
+                deviceRepository.save(deviceEntity);
+                result.put("message", true);
+                return result;
+            }
         }
+        throw new DeviceIsExist("Device is exist");
     }
 
     @Override
-    public DeviceRep findById(Integer id) throws IdNotFoundException{
+    public DeviceRep findById(Integer id) throws IdNotFoundException {
         Optional<DeviceEntity> deviceEntityOptional = deviceRepository.findById(id);
-        if(deviceEntityOptional.isPresent()) {
+        if (deviceEntityOptional.isPresent()) {
             DeviceEntity deviceEntity = deviceEntityOptional.get();
             List<DeviceInfoRep> deviceInfoRepList = changeToDeviceInforRep(deviceEntity.getId());
             return new DeviceRep(deviceEntity.getId(), deviceEntity.getStatus(), deviceEntity.getDeviceName(), deviceInfoRepList);
@@ -120,17 +129,9 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public List<DeviceRep> findAllByPage(Pageable pageable) {
         try {
-            Page<DeviceEntity> deviceEntities =  deviceRepository.findAll(pageable);
-            List<DeviceRep> deviceRepList = deviceEntities.stream().map(item -> {
-                List<DeviceInfoRep> deviceInfoRepList = deviceInfoRepository.findByDeviceId(item.getId())
-                        .stream().map(list -> {
-                            DeviceInfoRep deviceInfoRep = new DeviceInfoRep();
-                            deviceInfoRep.setId(list.getId());
-                            deviceInfoRep.setAccountId(list.getAccountId());
-                            deviceInfoRep.setLastuseAt(list.getLastuseAt());
-                            deviceInfoRep.setName(personalRepository.findByAccountId(list.getAccountId()).get().getLastName());
-                            return deviceInfoRep;
-                        }).collect(Collectors.toList());
+            Page<DeviceEntity> deviceEntities = deviceRepository.findAll(pageable);
+            List<DeviceRep> deviceRepList = deviceEntities.toList().stream().map(item -> {
+                List<DeviceInfoRep> deviceInfoRepList = changeToDeviceInforRep(item.getId());
                 return new DeviceRep(item.getId(), item.getStatus(), item.getDeviceName(), deviceInfoRepList);
             }).collect(Collectors.toList());
             return deviceRepList;
@@ -139,5 +140,24 @@ public class DeviceServiceImpl implements DeviceService {
             return null;
         }
 
+    }
+
+    public List<DeviceRep> findAllByPageSort(Pageable pageable, Boolean sort) {
+        try {
+            Page<DeviceEntity> deviceEntities;
+            if (sort) {
+                deviceEntities = deviceRepository.findAllByOrderByStatusAsc(pageable);
+            } else {
+                deviceEntities = deviceRepository.findAllByOrderByStatusDesc(pageable);
+            }
+            List<DeviceRep> deviceRepList = deviceEntities.toList().stream().map(item -> {
+                List<DeviceInfoRep> deviceInfoRepList = changeToDeviceInforRep(item.getId());
+                return new DeviceRep(item.getId(), item.getStatus(), item.getDeviceName(), deviceInfoRepList);
+            }).collect(Collectors.toList());
+            return deviceRepList;
+        } catch (Exception ex) {
+            logger.error("Device not found error ", ex.toString());
+            return null;
+        }
     }
 }

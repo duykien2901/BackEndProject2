@@ -41,15 +41,33 @@ public class DeviceController {
         return ResponseEntity.ok(deviceRepository.findAll());
     }
 
-    @GetMapping("")
-    public ResponseEntity<?> findAllByPage(@RequestParam("page") Integer page, @RequestParam("size") Integer size) {
+    @GetMapping("/page")
+    public ResponseEntity<?> findAllByPage(@RequestParam("page") Integer page, @RequestParam("pageSize") Integer pageSize) {
         try {
             // when page < 0, this is a exception
-            Pageable pageable = PageRequest.of(page, size);
-            int totalPage = (int)Math.ceil((double) deviceRepository.findAll().size()/size);
+            Pageable pageable = PageRequest.of(page, pageSize);
 
             return Optional.ofNullable(deviceService.findAllByPage(pageable))
-                    .map(rsList -> !rsList.isEmpty() ? JsonResult.found(rsList, totalPage) : JsonResult.notFound("Device "))
+                    .map(rsList -> !rsList.isEmpty() ? JsonResult.found(rsList, deviceRepository.findAll().size()) :
+                            JsonResult.notFound("Device "))
+                    .orElse(JsonResult.serverError("Internal Server Error")
+                    );
+        } catch (Exception ex) {
+            logger.error("Device not found error ", ex.toString());
+            return JsonResult.serverError("Internal Server Error");
+        }
+    }
+
+    @GetMapping("/pageSort")
+    public ResponseEntity<?> findAllByPageSort(@RequestParam("page") Integer page, @RequestParam("pageSize") Integer pageSize,
+                                               @RequestParam("sort") Boolean sort) {
+        try {
+            // when page < 0, this is a exception
+            Pageable pageable = PageRequest.of(page, pageSize);
+
+            return Optional.ofNullable(deviceService.findAllByPageSort(pageable, sort))
+                    .map(rsList -> !rsList.isEmpty() ? JsonResult.found(rsList, deviceRepository.findAll().size()) :
+                            JsonResult.notFound("Device "))
                     .orElse(JsonResult.serverError("Internal Server Error")
                     );
         } catch (Exception ex) {
@@ -59,12 +77,14 @@ public class DeviceController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<?> searchByName(@RequestParam("name") String name, @RequestParam("page") Integer page, @RequestParam("size") Integer size) {
+    public ResponseEntity<?> searchByName(@RequestParam("name") String name, @RequestParam("page") Integer page,
+                                          @RequestParam("size") Integer size) {
         try {
             Pageable pageable = PageRequest.of(page, size);
             int totalPage = (int)Math.ceil((double) deviceRepository.searchByName(name, pageable).getSize()/size);
             return Optional.ofNullable(deviceService.searchByDeviceName(pageable, name))
-                    .map(rsList -> !rsList.isEmpty() ? JsonResult.found(rsList, totalPage) : JsonResult.notFound("Device"))
+                    .map(rsList -> !rsList.isEmpty() ? JsonResult.found(rsList, totalPage) :
+                            JsonResult.notFound("Device"))
                     .orElse(JsonResult.serverError("Internal Server Error"));
 
         } catch (Exception ex) {
@@ -78,7 +98,7 @@ public class DeviceController {
         return ResponseEntity.ok(deviceService.findById(id));
     }
 
-    @PostMapping("/insert")
+    @PostMapping("/add")
     public ResponseEntity<?> addDevice(@RequestBody DeviceReq deviceReq) {
         return ResponseEntity.ok(deviceService.addDevice(deviceReq));
     }

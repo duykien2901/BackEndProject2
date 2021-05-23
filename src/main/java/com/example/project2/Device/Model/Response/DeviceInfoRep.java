@@ -12,11 +12,13 @@ import java.sql.Timestamp;
 public class DeviceInfoRep {
     private Integer id;
 
-    private String name;
+    private String teacherName;
 
     private Integer accountId;
 
-    private Timestamp lastuseAt;
+    private String username;
+
+    private Timestamp lastUseAt;
 
 
 }

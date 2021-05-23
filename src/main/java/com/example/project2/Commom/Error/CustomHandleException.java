@@ -31,13 +31,13 @@ public class CustomHandleException {
 
     @ExceptionHandler(UnAuthorException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorModelResponse unauthor(UnAuthorException ex) {
+    public ErrorModelResponse unAuthor(UnAuthorException ex) {
         return new ErrorModelResponse(HttpStatus.UNAUTHORIZED, ex.getMessage());
     }
 
-    @ExceptionHandler(InternalServerError.class)
+    @ExceptionHandler(DeviceIsExist.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorModelResponse serverError(InternalServerError ex) {
+    public ErrorModelResponse serverError(DeviceIsExist ex) {
         return new ErrorModelResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
 
