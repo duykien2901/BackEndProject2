@@ -14,4 +14,7 @@ public class SignUpRequest {
 
     @NotBlank
     private  Integer permission;
+
+    @NotBlank
+    private Integer status;
 }

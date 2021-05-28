@@ -129,6 +129,8 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public List<DeviceRep> findAllByPage(Pageable pageable) {
         try {
+            String current = System.getProperty("user.dir");
+            System.out.println("Current working directory in Java : " + current);
             Page<DeviceEntity> deviceEntities = deviceRepository.findAll(pageable);
             List<DeviceRep> deviceRepList = deviceEntities.toList().stream().map(item -> {
                 List<DeviceInfoRep> deviceInfoRepList = changeToDeviceInforRep(item.getId());

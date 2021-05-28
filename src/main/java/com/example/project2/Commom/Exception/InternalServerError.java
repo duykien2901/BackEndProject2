@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 public class InternalServerError extends RuntimeException{
     private String message;
 
-    public InternalServerError() {
-        this.message = "Internal Server Error";
+    public InternalServerError(String message) {
+        this.message = message;
     }
 }

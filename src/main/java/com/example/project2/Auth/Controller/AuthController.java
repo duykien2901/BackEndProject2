@@ -11,8 +11,11 @@ import com.example.project2.Auth.Service.UserDetailsServiceImp;
 import com.example.project2.Commom.Exception.IdNotFoundException;
 import com.example.project2.Commom.Exception.PermissRoleError;
 import com.example.project2.Commom.Exception.UsernameOrPasswordNotFound;
+import com.example.project2.Json.JsonResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -68,21 +71,31 @@ public class AuthController {
 
     }
 
-    @PostMapping("/api/signup")
-    public ResponseEntity<Optional<UserEntity>> signUp(@RequestBody SignUpRequest signUpRequest) {
+    @PostMapping("/api/admin/signup")
+    public ResponseEntity<?> signUp(@RequestBody SignUpRequest signUpRequest) {
         return ResponseEntity.ok(userService.save(signUpRequest));
     }
 
-    @GetMapping("/api/admin")
-    public ResponseEntity<?> test() {
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("message", "hello");
-        return ResponseEntity.ok(map);
+    @GetMapping("/api/admin/account")
+    public ResponseEntity<?> getAccountUser(@RequestParam(value = "page") Integer page, @RequestParam(value = "pageSize") Integer pageSize) {
+        try {
+            Pageable pageable = PageRequest.of(page, pageSize);
+            return Optional.ofNullable(userService.getUserAccount(pageable)).map(rsList ->
+                    !rsList.isEmpty() ? JsonResult.found(rsList, userRepository.findByPermissionNotAndAndStatusNot(1, 0).size())
+                            : JsonResult.notFound("page is empty")
+            ).orElse(JsonResult.serverError("internal server error"));
+        } catch (Exception e) {
+            return JsonResult.serverError("internal server error");
+        }
     }
 
-    @GetMapping("/api/account")
-    public ResponseEntity<?> getAll() {
-       List<UserEntity> list = userRepository.findAll();
-        return ResponseEntity.ok(list);
+    @PutMapping("/api/admin/account/{id}")
+    public ResponseEntity<?> changeAccount(@PathVariable Integer id, @RequestBody SignUpRequest signUpRequest) {
+        return ResponseEntity.ok(userService.changeAccount(id, signUpRequest));
+    }
+
+    @DeleteMapping("/api/admin/account/{id}")
+    public ResponseEntity<?> deleteAccount(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(userService.deleteById(id));
     }
 }

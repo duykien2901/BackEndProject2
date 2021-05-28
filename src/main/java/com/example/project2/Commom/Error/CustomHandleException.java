@@ -46,4 +46,16 @@ public class CustomHandleException {
     public ErrorModelResponse badRequest(TimetableIsExist ex) {
         return new ErrorModelResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
     }
+
+    @ExceptionHandler(UsernameIsExist.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorModelResponse usernameIsExist(UsernameIsExist ex) {
+        return new ErrorModelResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(InternalServerError.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorModelResponse badRequest(InternalServerError ex) {
+        return new ErrorModelResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+    }
 }

@@ -26,4 +26,6 @@ public class UserEntity {
     @Column
     private Integer permission;
 
+    @Column
+    private Integer status;
 }
