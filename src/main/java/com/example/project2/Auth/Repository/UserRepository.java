@@ -16,7 +16,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
     Boolean existsByUsername(String username);
 
-    Page<UserEntity> findByPermissionNotAndAndStatusNot(Integer permission, Integer status, Pageable pageable);
+    Page<UserEntity> findByPermissionNotAndAndStatusNotOrderByPermissionAsc(Integer permission, Integer status, Pageable pageable);
 
     List<UserEntity> findByPermissionNotAndAndStatusNot(Integer permission, Integer status);
 }

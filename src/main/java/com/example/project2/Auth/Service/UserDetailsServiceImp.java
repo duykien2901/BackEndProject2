@@ -38,7 +38,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
         userEntity.setUsername(signUpRequest.getUsername());
         userEntity.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
         userEntity.setPermission(signUpRequest.getPermission());
-        userEntity.setStatus(signUpRequest.getStatus());
+        userEntity.setStatus(1);
         return userEntity;
     }
 
@@ -75,7 +75,7 @@ public class UserDetailsServiceImp implements UserDetailsService {
     }
 
     public List<UserEntity> getUserAccount(Pageable pageable) {
-        return userRepository.findByPermissionNotAndAndStatusNot(1, 0,  pageable).toList();
+        return userRepository.findByPermissionNotAndAndStatusNotOrderByPermissionAsc(1, 0,  pageable).toList();
     }
 
     public Map deleteById(Integer id) throws IdNotFoundException, InternalServerError{
