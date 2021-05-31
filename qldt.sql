@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 10, 2021 at 05:31 AM
+-- Generation Time: May 31, 2021 at 10:17 AM
 -- Server version: 10.4.18-MariaDB
 -- PHP Version: 8.0.3
 
@@ -134,11 +134,25 @@ CREATE TABLE `device` (
 --
 
 INSERT INTO `device` (`id`, `status`, `device_name`) VALUES
-(2, 1, 'Xa don'),
-(3, 1, 'Bong ro'),
-(4, 1, 'da cau'),
-(6, 1, 'Xa don'),
-(7, 1, 'Bong ban');
+(2, 0, 'xa kep'),
+(3, 0, 'Bong ro'),
+(6, 0, 'Xa don'),
+(7, 1, 'Bong ban'),
+(10, 0, 'bong '),
+(12, 1, 'dem goi'),
+(13, 1, 'sào'),
+(14, 1, 'da cau 2'),
+(15, 0, 'da cau 3'),
+(16, 1, 'da cau 4'),
+(17, 1, 'da cau 5'),
+(18, 1, 'da cau 6'),
+(19, 1, 'da cau 7'),
+(21, 1, 'da cau 9'),
+(22, 0, 'da '),
+(23, 0, 'sac'),
+(24, 0, 'sacs'),
+(25, 0, '1'),
+(26, 1, 's');
 
 -- --------------------------------------------------------
 
@@ -232,6 +246,23 @@ INSERT INTO `health_certification` (`id`, `height`, `weight`, `eye_sight`, `heal
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `hibernate_sequence`
+--
+
+CREATE TABLE `hibernate_sequence` (
+  `next_val` bigint(20) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `hibernate_sequence`
+--
+
+INSERT INTO `hibernate_sequence` (`next_val`) VALUES
+(2);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `login_info`
 --
 
@@ -240,16 +271,22 @@ CREATE TABLE `login_info` (
   `password` varchar(256) NOT NULL,
   `permission` int(128) NOT NULL,
   `id` int(11) NOT NULL,
-  `personal_entity_id` int(11) DEFAULT NULL
+  `status` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `login_info`
 --
 
-INSERT INTO `login_info` (`username`, `password`, `permission`, `id`, `personal_entity_id`) VALUES
-('duykien', '$2a$10$TUe8Dgv2hasJHFy6oKtDOu0pNBouzhmRV0fuL5v4mKSxRYm.403pu', 1, 1, NULL),
-('teacher', '$2a$10$F3L.0CdtsJXUQokLt2OZ.eH1HqxokIp5ny1yf9B/10QVvktm88nEK', 3, 2, NULL);
+INSERT INTO `login_info` (`username`, `password`, `permission`, `id`, `status`) VALUES
+('duykien', '$2a$10$TUe8Dgv2hasJHFy6oKtDOu0pNBouzhmRV0fuL5v4mKSxRYm.403pu', 1, 1, 1),
+('teacherKien', '$2a$10$JrfaXt595N598oARaf.mD.KJW5QhgQiFoA7u9D4ZLMGq3o8sn5Rre', 3, 2, 1),
+('teacher3', '$2a$10$YAXuajhIjoPN0pYTzxiYqunlLMaef58nlwa4h0ZJg.PYI2RDY3dWm', 3, 3, 1),
+('duykien2901', '$2a$10$p9MhJZxqrXicaROFkJyL3.MdQhXF8c39vtDot7pJT9k5.FXXIJkSa', 1, 4, 1),
+('duykien2901k', '$2a$10$iv5vhl5HrmHxoxBJ3Keg9OqTbDIR6gF/Vsjj9t83M.CerCXSKAYi.', 2, 5, 1),
+('quanml', '$2a$10$MHk69/QOXVSu.kc/2AOFZuYYc662B6FlD3q4KB5tqXdWn53D1eQL6', 2, 6, 1),
+('abc@gmail.com', '$2a$10$dJJb502jioooCjaJpcPR.uoV6JpPiCR15jRRR8kShVy.VC6nI2GB6', 3, 7, 1),
+('ds1', '$2a$10$wFzofVFTjEVvkVxuebcFL.wZ4lzuFeKV3zfdH1vLYpiIe2.Ljdqh.', 3, 8, 1);
 
 -- --------------------------------------------------------
 
@@ -296,7 +333,8 @@ CREATE TABLE `personal_info` (
 
 INSERT INTO `personal_info` (`id`, `first_name`, `last_name`, `gender`, `date_of_birth`, `address`, `ethnicity`, `religion`, `phone_number`, `email`, `account_id`) VALUES
 (1, 'Nguyen', 'Hoa', 2, '2011-05-10 22:54:10', 'Huong canh', 'Kinh', 'Khong', '0985068971', 'hoa@gmail.com', 2),
-(2, 'Nguyen', 'Kien', 1, '2021-04-08 21:34:39', 'Kim Hoa', 'Kinh', 'Khong', '0985068974', 'kienlop9altt2014@gmail.com', 1);
+(2, 'Nguyen', 'Kien', 1, '2021-04-08 21:34:39', 'Kim Hoa', 'Kinh', 'Khong', '0985068974', 'kienlop9altt2014@gmail.com', 1),
+(4, 'Nguyen', 'Tam', 2, '2011-05-10 22:54:10', 'Huong canh', 'Kinh', 'Khong', '0985068975', 'tam@gmail.com', 3);
 
 -- --------------------------------------------------------
 
@@ -339,7 +377,41 @@ CREATE TABLE `teacher` (
 --
 
 INSERT INTO `teacher` (`id`, `course_id`, `archive_id`, `account_id`) VALUES
-(1, 1, 1, 2);
+(1, 1, 1, 2),
+(2, 1, 1, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `testFile`
+--
+
+CREATE TABLE `testFile` (
+  `id` int(11) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(11) NOT NULL,
+  `photo` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `test_file`
+--
+
+CREATE TABLE `test_file` (
+  `id` bigint(20) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `photo` varchar(255) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `test_file`
+--
+
+INSERT INTO `test_file` (`id`, `email`, `password`, `photo`) VALUES
+(1, 'h', 'd', 'images/Screenshot from 2021-05-24 16-54-39.png');
 
 -- --------------------------------------------------------
 
@@ -361,10 +433,57 @@ CREATE TABLE `timetable` (
 --
 
 INSERT INTO `timetable` (`id`, `classroom_id`, `teacher_id`, `course_id`, `day_of_week`, `shift`) VALUES
-(2, 1, 1, 1, 3, 0),
-(3, 1, 1, 1, 4, 1),
-(5, 1, 1, 1, 1, 2),
-(7, 1, 1, 1, 3, 1);
+(38, 1, 1, 1, 3, 2),
+(39, 1, 1, 1, 3, 2),
+(40, 1, 2, 1, 3, 7),
+(41, 1, 1, 1, 3, 2),
+(42, 1, 1, 1, 3, 2),
+(43, 1, 1, 1, 3, 2),
+(44, 1, 1, 1, 3, 2),
+(45, 1, 1, 1, 3, 2),
+(46, 1, 1, 1, 3, 2),
+(47, 1, 1, 1, 3, 2),
+(48, 1, 1, 1, 3, 2),
+(49, 1, 1, 1, 3, 2),
+(50, 1, 1, 1, 3, 2),
+(51, 1, 1, 1, 3, 2),
+(52, 1, 1, 1, 3, 2),
+(53, 1, 1, 1, 3, 2),
+(54, 1, 1, 1, 3, 2),
+(55, 1, 1, 1, 3, 2),
+(56, 1, 1, 1, 3, 2),
+(57, 1, 1, 1, 3, 2),
+(58, 1, 1, 1, 3, 2),
+(59, 1, 1, 1, 3, 2),
+(60, 1, 1, 1, 3, 2),
+(61, 1, 1, 1, 3, 2),
+(62, 1, 1, 1, 3, 2),
+(63, 1, 1, 1, 3, 2),
+(64, 1, 1, 1, 3, 2),
+(65, 1, 1, 1, 3, 2),
+(66, 1, 1, 1, 3, 2),
+(67, 1, 1, 1, 3, 2),
+(68, 1, 1, 1, 3, 2),
+(69, 1, 1, 1, 3, 2),
+(70, 1, 1, 1, 3, 2),
+(71, 1, 1, 1, 3, 2),
+(72, 1, 1, 1, 3, 2),
+(73, 1, 1, 1, 3, 2),
+(74, 1, 1, 1, 3, 3),
+(75, 1, 2, 1, 3, 3),
+(76, 1, 1, 1, 3, 4),
+(77, 1, 2, 1, 3, 5),
+(78, 1, 2, 1, 6, 3),
+(80, 1, 1, 1, 5, 1),
+(82, 1, 2, 1, 5, 3),
+(83, 1, 2, 1, 6, 1),
+(84, 1, 2, 1, 5, 5),
+(85, 1, 1, 1, 6, 2),
+(86, 1, 2, 1, 5, 6),
+(87, 1, 1, 1, 4, 3),
+(88, 1, 1, 1, 4, 1),
+(89, 1, 1, 1, 1, 1),
+(90, 1, 2, 1, 7, 3);
 
 --
 -- Indexes for dumped tables
@@ -481,6 +600,12 @@ ALTER TABLE `teacher`
   ADD KEY `FKhygqcatr5vou732ycigu0i0vk` (`account_id`);
 
 --
+-- Indexes for table `test_file`
+--
+ALTER TABLE `test_file`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `timetable`
 --
 ALTER TABLE `timetable`
@@ -527,7 +652,7 @@ ALTER TABLE `course`
 -- AUTO_INCREMENT for table `device`
 --
 ALTER TABLE `device`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `device_manage`
@@ -557,19 +682,19 @@ ALTER TABLE `health_certification`
 -- AUTO_INCREMENT for table `login_info`
 --
 ALTER TABLE `login_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `personal_info`
 --
 ALTER TABLE `personal_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `timetable`
 --
 ALTER TABLE `timetable`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- Constraints for dumped tables
@@ -617,12 +742,6 @@ ALTER TABLE `grade`
   ADD CONSTRAINT `FK_Grade_Student` FOREIGN KEY (`student_id`) REFERENCES `student` (`id`);
 
 --
--- Constraints for table `login_info`
---
-ALTER TABLE `login_info`
-  ADD CONSTRAINT `FKv1wus45cfsrigvnauagcj938` FOREIGN KEY (`personal_entity_id`) REFERENCES `personal_info` (`id`);
-
---
 -- Constraints for table `parent`
 --
 ALTER TABLE `parent`
@@ -650,7 +769,7 @@ ALTER TABLE `teacher`
   ADD CONSTRAINT `FK_LoginInfo_teacher` FOREIGN KEY (`account_id`) REFERENCES `login_info` (`Id`),
   ADD CONSTRAINT `FK_Person_Archive` FOREIGN KEY (`archive_id`) REFERENCES `archivement` (`id`),
   ADD CONSTRAINT `FK_Teacher_Course` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`),
-  ADD CONSTRAINT `FKhygqcatr5vou732ycigu0i0vk` FOREIGN KEY (`account_id`) REFERENCES `personal_info` (`id`);
+  ADD CONSTRAINT `FKhygqcatr5vou732ycigu0i0vk` FOREIGN KEY (`account_id`) REFERENCES `login_info` (`id`);
 
 --
 -- Constraints for table `timetable`
