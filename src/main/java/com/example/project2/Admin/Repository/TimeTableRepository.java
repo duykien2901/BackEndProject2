@@ -15,7 +15,7 @@ public interface TimeTableRepository extends JpaRepository<TimetableEntity, Inte
     @Query(value = "select * from timetable where teacher_id = :teacherId", nativeQuery = true)
     public List<TimetableEntity> findByTeacherId(@Param(value = "teacherId") Integer teacherId);
 
-    @Query(value = "select * from timetable where classroom_id = :classroom_id", nativeQuery = true)
+    @Query(value = "select * from timetable where classroom_id = :classroom_id order by day_of_week, shift asc", nativeQuery = true)
     public List<TimetableEntity> findByClassroomId(@Param(value = "classroom_id") Integer classroomId);
 
     @Query(value = "select * from timetable order by ", nativeQuery = true)

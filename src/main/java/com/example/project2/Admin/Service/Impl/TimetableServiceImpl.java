@@ -179,11 +179,13 @@ public class TimetableServiceImpl implements TimetableServiceIntf {
     }
 
     @Override
-    public List<TimetableEntity> getTimetableFromStudentId(Integer studentId) throws IdNotFoundException {
+    public List<TimetableRes> getTimetableFromStudentId(Integer accountId) throws IdNotFoundException {
+        Integer studentId = studentRepository.findByAccountId(accountId).getId();
         Optional<StudentEntity> studentEntity = studentRepository.findById(studentId);
         if (studentEntity.isPresent()) {
             List<TimetableEntity> timetableEntityList = timeTableRepository.findByClassroomId(studentEntity.get().getClassroomId());
-            return timetableEntityList;
+            List<TimetableRes> timetableResList = convertToLístTimetableRes(timetableEntityList);
+            return timetableResList;
         } else {
             throw new IdNotFoundException(studentId);
         }

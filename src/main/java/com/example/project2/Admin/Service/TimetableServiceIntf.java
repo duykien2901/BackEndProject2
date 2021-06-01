@@ -19,7 +19,7 @@ public interface TimetableServiceIntf {
 
     public List<TimetableEntity> getTeacherFromId(Integer teacherId);
 
-    public List<TimetableEntity> getTimetableFromStudentId(Integer studentId);
+    public List<TimetableRes> getTimetableFromStudentId(Integer studentId);
 
     public List<TimetableRes> getAllByPage(Pageable pageable);
 

@@ -123,9 +123,9 @@ public class TimetableController {
     }
 
     // API For Student
-    @GetMapping("/api/timetable/student/{student_id}")
-    public ResponseEntity<?> getTimetableForStudent(@PathVariable("student_id") Integer studentId) {
-        return ResponseEntity.ok(timetableService.getTimetableFromStudentId(studentId));
+    @GetMapping("/api/timetable/student/{account_id}")
+    public ResponseEntity<?> getTimetableForStudent(@PathVariable("account_id") Integer accountId) {
+        return ResponseEntity.ok(timetableService.getTimetableFromStudentId(accountId));
     }
 
 }
