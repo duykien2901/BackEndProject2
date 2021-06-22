@@ -39,19 +39,16 @@ public class GradeController {
              return Optional.ofNullable(gradeSevice.getGradeByPage(studentId, pageable))
                      .map(rsPage -> !rsPage.isEmpty() ? JsonResult.found(rsPage.getContent(), total) : JsonResult.notFound("Page"))
                      .orElse(JsonResult.serverError("Intenal Server Error"));
-    //        return ResponseEntity.ok (gradeSevice.getGradeByPage(studentId, pageable).getContent());
          } catch (Exception ex) {
              return (JsonResult.serverError("Intenal Server Error"));
          }
     }
-    @GetMapping("/student/test")
-    public ResponseEntity<?> getGradeStudentById() {
-        Integer s = gradeRepository.findByStudentIdtest();
-        Map<String, Integer> ss = new HashMap<>();
-        ss.put("message", s);
-        return ResponseEntity.ok(ss);
-    }
 
-//    @GetMapping("/student/search")
-//    public ResponseEntity<?>
+    @GetMapping("/teacher")
+    public ResponseEntity<?> getGrandeStudentClass(@RequestParam Integer courseId, @RequestParam Integer classroomId,
+                                                  @RequestParam Integer studentId) {
+//        return ResponseEntity.ok(gradeSevice.getGrandeStudentClass(courseId, classroomId, studentId));
+        System.out.println(studentId);
+        return ResponseEntity.ok("ss");
+    }
 }

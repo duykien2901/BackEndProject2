@@ -27,4 +27,10 @@ public class TeacherController {
     public ResponseEntity<?> getTeacherName(@PathVariable Integer id) {
         return ResponseEntity.ok(teacherService.getTeacherName(id));
     }
+
+    @GetMapping("/api/teacher/classCourseStudent/{teacherId}")
+        public ResponseEntity<?> getClassCourseStudent(@PathVariable Integer teacherId){
+            return ResponseEntity.ok(teacherService.getClassCourseStudent(teacherId));
+        }
+
 }

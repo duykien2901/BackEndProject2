@@ -1,9 +1,16 @@
 package com.example.project2.Teacher.Service.Impl;
 
+import com.example.project2.Admin.Entity.ClassroomEntity;
+import com.example.project2.Admin.Entity.CourseEntity;
+import com.example.project2.Admin.Entity.TimetableEntity;
+import com.example.project2.Admin.Model.Response.CourseDTORes;
+import com.example.project2.Admin.Repository.TimeTableRepository;
+import com.example.project2.Admin.Service.Impl.CourseServiceImp;
 import com.example.project2.Commom.Exception.IdNotFoundException;
 import com.example.project2.PersonalInfor.Entity.PersonalEntity;
 import com.example.project2.PersonalInfor.Service.Impl.PersonalServiceImpl;
 import com.example.project2.Teacher.Entity.TeacherEntity;
+import com.example.project2.Teacher.Model.Response.CourseClassStudentRes;
 import com.example.project2.Teacher.Model.Response.TeacherResponse;
 import com.example.project2.Teacher.Repository.TeacherRepository;
 import com.example.project2.Teacher.Service.TeacherSer;
@@ -20,6 +27,12 @@ public class TeacherServiceImpl implements TeacherSer {
     TeacherRepository teacherRepository;
 
     @Autowired
+    CourseServiceImp courseService;
+
+    @Autowired
+    TimeTableRepository timeTableRepository;
+
+    @Autowired
     PersonalServiceImpl personalService;
 
     public List<TeacherResponse> converToTeacherRes(List<TeacherEntity> teacherEntityList) {
@@ -34,6 +47,16 @@ public class TeacherServiceImpl implements TeacherSer {
     public List<TeacherResponse> findAll() {
         List<TeacherResponse> teacherResponseList = converToTeacherRes(teacherRepository.findAll());
         return teacherResponseList;
+    }
+
+//    @Override
+    public List<CourseDTORes> getClassCourseStudent(Integer teacherId) {
+        List<CourseEntity>  list = timeTableRepository.getListCourseFromTeacherId(teacherId);
+        List<CourseDTORes> courseDTOResList = list.stream().map((item) -> {
+            List<ClassroomEntity> classroomEntities = timeTableRepository.getListClassFromTeacherIdAndCourseId(teacherId, item.getId());
+            return courseService.convertToCourseDTO(item, classroomEntities);
+        }).collect(Collectors.toList());
+        return courseDTOResList;
     }
 
     @Override

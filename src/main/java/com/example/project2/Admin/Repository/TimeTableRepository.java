@@ -1,5 +1,7 @@
 package com.example.project2.Admin.Repository;
 
+import com.example.project2.Admin.Entity.ClassroomEntity;
+import com.example.project2.Admin.Entity.CourseEntity;
 import com.example.project2.Admin.Entity.TimetableEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +14,13 @@ import java.util.List;
 
 @Repository
 public interface TimeTableRepository extends JpaRepository<TimetableEntity, Integer> {
+    @Query(value = "select distinct(c) from TimetableEntity t, CourseEntity c where t.courseId = c.id and t.teacherId = :teacherId")
+    public List<CourseEntity> getListCourseFromTeacherId(Integer teacherId);
+
+    @Query(value = "select distinct(c) from TimetableEntity t, ClassroomEntity c " +
+            "where t.classroomId = c.id and t.teacherId = :teacherId and t.courseId = :courseId")
+    public List<ClassroomEntity> getListClassFromTeacherIdAndCourseId(Integer teacherId, Integer courseId);
+
     @Query(value = "select * from timetable where teacher_id = :teacherId", nativeQuery = true)
     public List<TimetableEntity> findByTeacherId(@Param(value = "teacherId") Integer teacherId);
 
