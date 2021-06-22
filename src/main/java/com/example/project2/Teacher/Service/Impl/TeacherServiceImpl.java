@@ -35,7 +35,7 @@ public class TeacherServiceImpl implements TeacherSer {
     @Autowired
     PersonalServiceImpl personalService;
 
-    public List<TeacherResponse> converToTeacherRes(List<TeacherEntity> teacherEntityList) {
+    public List<TeacherResponse> convertToTeacherRes(List<TeacherEntity> teacherEntityList) {
         List<TeacherResponse> teacherResponseList = teacherEntityList.stream()
                 .map(teacher -> {
                     return new TeacherResponse(teacher.getId(), personalService.findByAccountId(teacher.getAccountId()).get().getLastName());
@@ -45,7 +45,7 @@ public class TeacherServiceImpl implements TeacherSer {
 
     @Override
     public List<TeacherResponse> findAll() {
-        List<TeacherResponse> teacherResponseList = converToTeacherRes(teacherRepository.findAll());
+        List<TeacherResponse> teacherResponseList = convertToTeacherRes(teacherRepository.findAll());
         return teacherResponseList;
     }
 

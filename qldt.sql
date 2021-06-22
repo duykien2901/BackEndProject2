@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 31, 2021 at 10:17 AM
+-- Generation Time: Jun 22, 2021 at 09:56 PM
 -- Server version: 10.4.18-MariaDB
 -- PHP Version: 8.0.3
 
@@ -99,6 +99,13 @@ CREATE TABLE `conduct` (
   `student_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `conduct`
+--
+
+INSERT INTO `conduct` (`id`, `score`, `term`, `school_year`, `student_id`) VALUES
+(1, 'Tot', 1, 2018, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -115,7 +122,9 @@ CREATE TABLE `course` (
 --
 
 INSERT INTO `course` (`id`, `course_name`) VALUES
-(1, 'Toan');
+(1, 'Toan'),
+(2, 'Van'),
+(3, 'Anh');
 
 -- --------------------------------------------------------
 
@@ -136,7 +145,7 @@ CREATE TABLE `device` (
 INSERT INTO `device` (`id`, `status`, `device_name`) VALUES
 (2, 0, 'xa kep'),
 (3, 0, 'Bong ro'),
-(6, 0, 'Xa don'),
+(6, 1, 'Xa don'),
 (7, 1, 'Bong ban'),
 (10, 0, 'bong '),
 (12, 1, 'dem goi'),
@@ -173,7 +182,6 @@ CREATE TABLE `device_manage` (
 
 INSERT INTO `device_manage` (`id`, `account_id`, `device_id`, `lastuse_at`) VALUES
 (2, 1, 2, '2021-04-02 16:31:47'),
-(3, 2, 3, '2021-04-15 16:31:47'),
 (4, 2, 3, '2021-04-23 16:31:47');
 
 -- --------------------------------------------------------
@@ -203,13 +211,13 @@ CREATE TABLE `grade` (
   `student_id` int(11) NOT NULL,
   `course_id` int(11) NOT NULL,
   `school_year` int(11) NOT NULL,
-  `term` int(11) NOT NULL,
-  `mid_term_test` int(11) NOT NULL,
-  `final_term_test` int(11) NOT NULL,
-  `quiz1` int(11) NOT NULL,
+  `term` int(11) DEFAULT NULL,
+  `mid_term_test` int(11) DEFAULT NULL,
+  `final_term_test` int(11) DEFAULT NULL,
+  `quiz1` int(11) DEFAULT NULL,
   `quiz2` int(11) DEFAULT NULL,
   `quiz3` int(11) DEFAULT NULL,
-  `test` int(11) NOT NULL
+  `test` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -219,7 +227,8 @@ CREATE TABLE `grade` (
 INSERT INTO `grade` (`id`, `student_id`, `course_id`, `school_year`, `term`, `mid_term_test`, `final_term_test`, `quiz1`, `quiz2`, `quiz3`, `test`) VALUES
 (1, 1, 1, 2018, 1, 9, 10, 10, 10, 10, 10),
 (2, 1, 1, 2018, 1, 10, 10, 10, 10, 10, 10),
-(3, 1, 1, 2018, 2, 10, 10, 10, 10, 10, 10);
+(3, 1, 1, 2018, 2, 10, 10, 10, 10, 10, 10),
+(4, 1, 1, 2018, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -258,7 +267,7 @@ CREATE TABLE `hibernate_sequence` (
 --
 
 INSERT INTO `hibernate_sequence` (`next_val`) VALUES
-(2);
+(1);
 
 -- --------------------------------------------------------
 
@@ -280,10 +289,10 @@ CREATE TABLE `login_info` (
 
 INSERT INTO `login_info` (`username`, `password`, `permission`, `id`, `status`) VALUES
 ('duykien', '$2a$10$TUe8Dgv2hasJHFy6oKtDOu0pNBouzhmRV0fuL5v4mKSxRYm.403pu', 1, 1, 1),
-('teacherKien', '$2a$10$JrfaXt595N598oARaf.mD.KJW5QhgQiFoA7u9D4ZLMGq3o8sn5Rre', 3, 2, 1),
+('teacher', '$2a$10$uT5/XBBqK5jksvB9.Z9m1.KaTV56dCumFs7AyxIaU4eM6BQTX5hRS', 3, 2, 1),
 ('teacher3', '$2a$10$YAXuajhIjoPN0pYTzxiYqunlLMaef58nlwa4h0ZJg.PYI2RDY3dWm', 3, 3, 1),
 ('duykien2901', '$2a$10$p9MhJZxqrXicaROFkJyL3.MdQhXF8c39vtDot7pJT9k5.FXXIJkSa', 1, 4, 1),
-('duykien2901k', '$2a$10$iv5vhl5HrmHxoxBJ3Keg9OqTbDIR6gF/Vsjj9t83M.CerCXSKAYi.', 2, 5, 1),
+('hocsinh', '$2a$10$n8vYDVbwMiPiZ.wx70DSm.nBG38rCr3udXKB7X0PR7gVv1JzKUaYC', 2, 5, 1),
 ('quanml', '$2a$10$MHk69/QOXVSu.kc/2AOFZuYYc662B6FlD3q4KB5tqXdWn53D1eQL6', 2, 6, 1),
 ('abc@gmail.com', '$2a$10$dJJb502jioooCjaJpcPR.uoV6JpPiCR15jRRR8kShVy.VC6nI2GB6', 3, 7, 1),
 ('ds1', '$2a$10$wFzofVFTjEVvkVxuebcFL.wZ4lzuFeKV3zfdH1vLYpiIe2.Ljdqh.', 3, 8, 1);
@@ -332,9 +341,12 @@ CREATE TABLE `personal_info` (
 --
 
 INSERT INTO `personal_info` (`id`, `first_name`, `last_name`, `gender`, `date_of_birth`, `address`, `ethnicity`, `religion`, `phone_number`, `email`, `account_id`) VALUES
-(1, 'Nguyen', 'Hoa', 2, '2011-05-10 22:54:10', 'Huong canh', 'Kinh', 'Khong', '0985068971', 'hoa@gmail.com', 2),
+(1, 'Nguyen', 'Hoa', 1, '2020-04-15 07:00:00', 'Huong canh', 'Kinh', 'Khong', '0985068971', 'hoa@gmail.com', 2),
 (2, 'Nguyen', 'Kien', 1, '2021-04-08 21:34:39', 'Kim Hoa', 'Kinh', 'Khong', '0985068974', 'kienlop9altt2014@gmail.com', 1),
-(4, 'Nguyen', 'Tam', 2, '2011-05-10 22:54:10', 'Huong canh', 'Kinh', 'Khong', '0985068975', 'tam@gmail.com', 3);
+(4, 'Nguyen', 'Tam', 2, '2020-03-14 07:00:00', 'Huong canh', 'Kinh', 'Khong', '0985068975', 'tam@gmail.com', 3),
+(5, 'Nguyen', 'KIen', 1, '2000-01-29 07:00:00', '126 Kim Hoa, Đống Đa, Hà Nội', 'Kinh', 'Không', '0985068974', 'kienlop9altt2014@gmail.com', 5),
+(6, 'Nguyen', 'KIen', 1, '2021-06-03 07:00:00', '126 Kim Hoa, Đống Đa, Hà Nội', 'Kinh', 'k', '0985068974', 'kienlop9altt2014@gmail.com', 6),
+(7, 'dsd', 'afa', 1, '2021-06-08 07:00:00', '126 Kim Hoa, Đống Đa, Hà Nội', 'Kinh', '1', '0985068974', 'kienlop9altt2014@gmail.com', 7);
 
 -- --------------------------------------------------------
 
@@ -357,7 +369,7 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`id`, `classroom_id`, `health_certification_id`, `archive_id`, `status`, `admission_year`, `account_id`) VALUES
-(1, 1, 1, 1, 'Hoc tap', 2018, 1);
+(1, 1, 1, 1, 'Hoc tap', 2018, 5);
 
 -- --------------------------------------------------------
 
@@ -378,7 +390,8 @@ CREATE TABLE `teacher` (
 
 INSERT INTO `teacher` (`id`, `course_id`, `archive_id`, `account_id`) VALUES
 (1, 1, 1, 2),
-(2, 1, 1, 3);
+(2, 1, 1, 3),
+(3, 3, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -433,43 +446,6 @@ CREATE TABLE `timetable` (
 --
 
 INSERT INTO `timetable` (`id`, `classroom_id`, `teacher_id`, `course_id`, `day_of_week`, `shift`) VALUES
-(38, 1, 1, 1, 3, 2),
-(39, 1, 1, 1, 3, 2),
-(40, 1, 2, 1, 3, 7),
-(41, 1, 1, 1, 3, 2),
-(42, 1, 1, 1, 3, 2),
-(43, 1, 1, 1, 3, 2),
-(44, 1, 1, 1, 3, 2),
-(45, 1, 1, 1, 3, 2),
-(46, 1, 1, 1, 3, 2),
-(47, 1, 1, 1, 3, 2),
-(48, 1, 1, 1, 3, 2),
-(49, 1, 1, 1, 3, 2),
-(50, 1, 1, 1, 3, 2),
-(51, 1, 1, 1, 3, 2),
-(52, 1, 1, 1, 3, 2),
-(53, 1, 1, 1, 3, 2),
-(54, 1, 1, 1, 3, 2),
-(55, 1, 1, 1, 3, 2),
-(56, 1, 1, 1, 3, 2),
-(57, 1, 1, 1, 3, 2),
-(58, 1, 1, 1, 3, 2),
-(59, 1, 1, 1, 3, 2),
-(60, 1, 1, 1, 3, 2),
-(61, 1, 1, 1, 3, 2),
-(62, 1, 1, 1, 3, 2),
-(63, 1, 1, 1, 3, 2),
-(64, 1, 1, 1, 3, 2),
-(65, 1, 1, 1, 3, 2),
-(66, 1, 1, 1, 3, 2),
-(67, 1, 1, 1, 3, 2),
-(68, 1, 1, 1, 3, 2),
-(69, 1, 1, 1, 3, 2),
-(70, 1, 1, 1, 3, 2),
-(71, 1, 1, 1, 3, 2),
-(72, 1, 1, 1, 3, 2),
-(73, 1, 1, 1, 3, 2),
-(74, 1, 1, 1, 3, 3),
 (75, 1, 2, 1, 3, 3),
 (76, 1, 1, 1, 3, 4),
 (77, 1, 2, 1, 3, 5),
@@ -478,12 +454,14 @@ INSERT INTO `timetable` (`id`, `classroom_id`, `teacher_id`, `course_id`, `day_o
 (82, 1, 2, 1, 5, 3),
 (83, 1, 2, 1, 6, 1),
 (84, 1, 2, 1, 5, 5),
-(85, 1, 1, 1, 6, 2),
+(85, 1, 1, 1, 6, 7),
 (86, 1, 2, 1, 5, 6),
 (87, 1, 1, 1, 4, 3),
 (88, 1, 1, 1, 4, 1),
 (89, 1, 1, 1, 1, 1),
-(90, 1, 2, 1, 7, 3);
+(90, 1, 2, 1, 7, 3),
+(91, 1, 1, 1, 4, 6),
+(92, 1, 3, 2, 7, 2);
 
 --
 -- Indexes for dumped tables
@@ -640,13 +618,13 @@ ALTER TABLE `class_record`
 -- AUTO_INCREMENT for table `conduct`
 --
 ALTER TABLE `conduct`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `course`
 --
 ALTER TABLE `course`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `device`
@@ -670,7 +648,7 @@ ALTER TABLE `file`
 -- AUTO_INCREMENT for table `grade`
 --
 ALTER TABLE `grade`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `health_certification`
@@ -688,13 +666,13 @@ ALTER TABLE `login_info`
 -- AUTO_INCREMENT for table `personal_info`
 --
 ALTER TABLE `personal_info`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `timetable`
 --
 ALTER TABLE `timetable`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=93;
 
 --
 -- Constraints for dumped tables
